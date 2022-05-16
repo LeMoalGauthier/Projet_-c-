@@ -1,0 +1,19 @@
+#ifndef CONTOUR_H
+#define CONTOUR_H
+#include <iostream>
+#include <vector>
+#include "Point.h"
+
+using namespace std;
+
+class Contour{
+    private :
+        vector<Point> point;
+    public :
+        Contour(){};
+        ~Contour(){};
+        vector<Point> getPoints(){return point;}
+        void ajoutUnPoint(Point);
+};
+
+#endif;
