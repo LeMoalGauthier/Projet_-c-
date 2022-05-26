@@ -3,24 +3,28 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Contour.h"
+
+#include "Ville.h"
 #include "Waypoint.h"
+#include "Contour.h"
 #include "Route.h"
 
 using namespace std;
 
 class Carte {
-    private :
+    protected :
         vector<Route> route;
-        vector<string> nom;
+        vector<Waypoint> waypoint;
         Contour contour;
+        int echelleLon;
     public :
-        Carte(){};
+        Carte();
         ~Carte(){};
         Contour getContour(){return contour;}
-        float getEchelleLon(){return lon;}
+        float getEchelleLon(){return echelleLon;}
+        vector<Waypoint> getWaypoint(){return waypoint;}
         vector<Route> getRoutes(){return route;}
-        vector<string> getNomsVilles(){return nom;}
+        vector<string> getNomsVilles(){}
         void ajoutUnWaypoint(Waypoint);
         void ajoutUneRoute(Route);
         void insereUneVille(Ville *);

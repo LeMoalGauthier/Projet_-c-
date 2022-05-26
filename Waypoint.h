@@ -8,12 +8,15 @@ using namespace std;
 
 class Waypoint {
 
-    private:
+    protected:
         string nom;
         float lon;
         float lat;
 
     public:
+        Waypoint(){};
+        Waypoint(string new_nom, float new_lon , float new_lat){nom = new_nom; lon = new_lon; lat = new_lat;};
+        ~Waypoint(){};
         string getNom(){return nom;};
         float getLon(){return lon;};
         float getLat(){return lat;};
