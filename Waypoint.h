@@ -21,9 +21,9 @@ class Waypoint {
         float getLon(){return lon;};
         float getLat(){return lat;};
         virtual bool isVille(){return false;};
-        string getInfos();
-        void affiche() {cout<< "Nom : " << nom << " Longitude : " << lon << " Latitude" << lat;};
+        //string getInfos();
+        void affiche() {cout<< "Nom : " << nom << " Longitude : " << lon << " Latitude" << lat << endl;};
 
 };
 
-#endif;
+#endif
