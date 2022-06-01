@@ -1,29 +1,30 @@
 #include "Graphe.h"
 
-vector<int> Graphe::Voisins(int indice){
+Graphe::Graphe(){
 
-    vector<int> voisins;
-    //string nom_waypoint = waypoint[indice].getNom();
-    
+    for(int i = 0; i< waypoint.size(); i++){
+        adjascence.push_back(make_pair(INF,INF));
+    }
+}
+
+void Graphe::Voisins(int indice, vector< pair<int,int> > &voisins){
+   
     for(int i = 0; i < route.size(); i++){
 
         //vérification si la route commence à la ville souhaité
         if(route[i].getDeb() == indice){
 
             //ajout de la ville voisine au tableau 
-            voisins.push_back(route[i].getFin());
+            voisins.push_back(make_pair(route[i].getDistance() ,route[i].getFin()));
 
         //vérification si la route arrive à la ville souhaité
         }else if(route[i].getFin() == indice){
 
             //ajout de la ville voisine au tableau 
-            voisins.push_back(route[i].getDeb());
+            voisins.push_back(make_pair(route[i].getDistance() ,route[i].getDeb()));
 
         }
     }
-    //renvoi le tableau contenant les indices des voisins
-    return voisins;
-
 };
 
 int Graphe::Distance(int ind_deb, int ind_fin){
@@ -46,67 +47,97 @@ int Graphe::Distance(int ind_deb, int ind_fin){
     }
 };
 
-vector<int> Graphe::Trajet(int ind_deb, int ind_fin){
-    // * Cette algorithme se repose sur l'algorithme de Dijkstra
-    vector<int> trajet;
 
-    //création du tableau qui stocke les distance entre le point de départ et les autres points sur toute la carte 
-    vector<int> dist;
-    vector<bool> visite;
+vector<Route> Graphe::Trajet(int ind_deb, int ind_fin){
 
-    //création des variables qui nous serviront de à retenir les information à chaque tour de boucle
-    int dist_min, id_voisin_proche, id_position = ind_deb;
+    // * Cette algorithme se base sur l'algorithme de Dijkstra
 
-    //initialisation du tableau de distance et de visité
-    for (int i = 0; i < waypoint.size() ; i++){
-        if(i == id_position){
-            dist.push_back(0);
+    //voisins permet de stocker les voisins du noeud ou l'on est (1er int = distance, 2eme int = noeud destination) chemin récupère la liste de ville à parcourir pour atteindre la destination (en commencant par l'arrivée)
+    vector< pair<int,int> > voisins, chemin;
+
+    //id_position stocke notre position actuel idistance stocke la distance le voisin le + proche meilleur_voisin sauvegarde le meilleur voisin
+    int id_position = ind_deb, idistance, proche_waypoint = ind_deb;
+
+    //visité permet de savoir si l'on a déjà été à un waypoint
+    vector<bool> visite; 
+    //Permet de savoir si le waypoint le plus proche est un voisin du point actuel
+    bool is_voisin;
+
+    //Permet de sauvegarder les route à parcourir pour atteindre la destination depuis le point de départ
+    vector<Route> trajet;
+
+    //Modification du Graph en fonction point de départ
+    adjascence[ind_deb].first = 0;
+    adjascence[ind_deb].second = 0;
+
+    //initialisation visite
+    for(int i = 0; i < waypoint.size(); i++){
+        if(i == ind_deb){
             visite.push_back(true);
         }else{
-            dist.push_back(100000);
             visite.push_back(false);
         }
-
     }
-    //tant que l'on est pas 
-    while(!visite[ind_fin]){
-    
-        //récupération des waypoints voisins du point actuel
-        vector<int> voisins = Voisins(id_position);
 
-        //initialisation de dist_min pour pour pouvoir ensuite retrouver le voisins le plus proche de la position actuelle
-        dist_min = 10000;
+    //cout << 0 << endl;
 
-        //récupération de la distance la plus courte entre les voisins
+    // * Début Algo --------------------------------------------
+
+    while(adjascence[ind_fin].first == INF){
+        //Récupération des voisins du noeud de départ
+        Voisins(id_position, voisins);
+
+        //Initialisation de idistance
+        idistance = INF;
+
+        //recherche du noeud le plus proche du point de position (dans adjascence)
+        for(int i = 0; i < adjascence.size(); i++){
+            if(!visite[i] && adjascence[i].first < idistance){
+                idistance = adjascence[i].first;
+                proche_waypoint = i;
+            }
+        }
+
+        //recherche du noeud le plus proche du point de position (dans voisin)
         for(int i = 0; i < voisins.size(); i++){
-            if(dist[voisins[i]] > Distance(id_position, voisins[i])){
-                dist[voisins[i]] = Distance(id_position, voisins[i]);
-            }
+            if(!visite[voisins[i].second] && voisins[i].first < idistance){
+
+                idistance = voisins[i].first;
+                proche_waypoint = voisins[i].second;
+            }    
         }
 
-        //récupération du voisin le plus proche 
-        for(int i = 0; i < waypoint.size(); i++){
-            if(dist[i] < dist_min && !visite[i]){
-                dist_min = dist[i];
-                id_voisin_proche = i;
-            }
-        }
+        //cin.ignore();
+        //cout << "Waypoint : " << proche_waypoint << " Distance : " << idistance;
+        
+        //mise à jour des données pour la prochaine boucle
+        adjascence[proche_waypoint].first = idistance;
+        adjascence[proche_waypoint].second =  id_position;
+        visite[proche_waypoint] = true;
+        id_position = proche_waypoint;
 
-        //ajout de l'id de la route à mettre en rouge pour atteindre la destination
-        for(int i = 0; i < route.size(); i++){
-            if(route[i].getDeb() == id_position && route[i].getFin() == id_voisin_proche){
-                trajet.push_back(i);
-            }
-        }
-
-        //"déplacement" au voisin le plus court et mise à jour du tableau
-        visite[id_voisin_proche] = true;
-        id_position = id_voisin_proche;
-
-        //sortie de la recherche du chemin le plus cours si la position actuelle est celle recherché
+        // // for(int i = 0; i < voisins.size() ; i++){
+        // //     if(voisins[voisins.size()-i].second == proche_waypoint){
+        // //         voisins.erase(voisins.end() - i);
+        // //     }
+        // // }
 
     }
+
+    //récupération du chemin
+    while(id_position != ind_deb){
+        chemin.push_back(adjascence[id_position]);
+        id_position = adjascence[id_position].second;
+    }
+
+    //création du trajet (de route)
+    for(int i = 0; i < chemin.size(); i++){
+        trajet.push_back(Route(id_position, chemin[chemin.size()-i].second, chemin[chemin.size()-i].first));
+        id_position = chemin[chemin.size()-i].second;
+    }
+
+        trajet.push_back(Route(id_position, ind_fin, Distance(id_position,ind_fin)));
 
     return trajet;
-
 }
+
