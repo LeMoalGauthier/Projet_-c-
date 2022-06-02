@@ -67,7 +67,7 @@ Carte::Carte(){
 
                     i_deb = i;
                     for(int j = 0; j < waypoint.size(); j++){
-                        cout << res2->getString(2) << waypoint[j].getNom() << endl;
+                        //cout << res2->getString(2) << waypoint[j].getNom() << endl;
 
                         if(res2->getString(2) == waypoint[j].getNom()){
                             i_fin = j;

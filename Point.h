@@ -21,4 +21,4 @@ class Point{
         void affiche(){cout << "Num : " << num << " Latitude : " << lat << " Longitude : " << lon << endl;}
 };
 
-#endif;
+#endif

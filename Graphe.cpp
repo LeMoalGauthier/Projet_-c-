@@ -106,21 +106,12 @@ vector<Route> Graphe::Trajet(int ind_deb, int ind_fin){
                 proche_waypoint = voisins[i].second;
             }    
         }
-
-        //cin.ignore();
-        //cout << "Waypoint : " << proche_waypoint << " Distance : " << idistance;
         
         //mise à jour des données pour la prochaine boucle
         adjascence[proche_waypoint].first = idistance;
         adjascence[proche_waypoint].second =  id_position;
         visite[proche_waypoint] = true;
         id_position = proche_waypoint;
-
-        // // for(int i = 0; i < voisins.size() ; i++){
-        // //     if(voisins[voisins.size()-i].second == proche_waypoint){
-        // //         voisins.erase(voisins.end() - i);
-        // //     }
-        // // }
 
     }
 
@@ -134,7 +125,9 @@ vector<Route> Graphe::Trajet(int ind_deb, int ind_fin){
     for(int i = 0; i < chemin.size(); i++){
         trajet.push_back(Route(id_position, chemin[chemin.size()-i].second, chemin[chemin.size()-i].first));
         id_position = chemin[chemin.size()-i].second;
+
     }
+
 
         trajet.push_back(Route(id_position, ind_fin, Distance(id_position,ind_fin)));
 

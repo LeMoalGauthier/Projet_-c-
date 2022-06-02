@@ -32,7 +32,7 @@ class Carte {
         void ajoutUnWaypoint(Waypoint){};
         void ajoutUneRoute(Route){};
         void insereUneVille(Ville *){};
-        void affiche(){};
+
 
         
 };

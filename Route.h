@@ -15,7 +15,7 @@ class Route{
         int i_deb;
         int i_fin;
         int distance;
-        // ? string infos; pas compris l'utilité de ça donc je laisse ça comme ça 
+        
 
     public :
         Route(){};
@@ -24,8 +24,7 @@ class Route{
         int getDeb(){return i_deb;}
         int getFin(){return i_fin;}
         int getDistance(){return distance;}
-        // ? string getInfos(){return infos;}
-        void affiche(){cout << "Ville de départ : " << i_deb << " Ville d'arrivé : " << " distance : " << distance << endl;};
+        void affiche(){cout << "Ville de départ : " << i_deb << " Ville d'arrivé : " << i_fin << " distance : " << distance << endl;};
 };
 
 #endif
